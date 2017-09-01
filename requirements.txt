@@ -1,3 +1,5 @@
 flask
 tokenize_uk
 numpy
+langdetect
+nltk
