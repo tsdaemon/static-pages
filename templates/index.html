@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}Applications{% endblock %}
+
+{% block header %}
+  <meta name="description" content="Examples of Daemon Engineer projects">
+  <meta name="keywords" content="Data science,machine learning,artificial intelligence,natural language processing,binary relations extraction">
+  <meta name="author" content="Anatolii Stehnii">
+
+  <meta property="og:title" content="Applications" />
+  <meta property="og:description" content="Examples of Daemon Engineer projects" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Daemon Engineer blog" />
+  <meta property="og:image" content="http://daemon-engineer.com/apps/img/fast_data_brain_tree.png" />
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+  <p class="lead">Flask powered hub for examples of Daemon Engineer research projects and visual experiments.</p>
+</div>
+
+<div class="row marketing">
+  {% for app in apps %}
+  <div class="col-lg-6">
+    <h4><a href="{{app.href}}">{{app.name}}</a></h4>
+    <p>{{app.description}}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

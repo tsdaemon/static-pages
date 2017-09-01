@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}Binary relations extractor{% endblock %}
+
+{% block header %}
+  <meta name="description" content="Form for binary relation extraction.">
+  <meta name="keywords" content="natural language processing,binary relations extraction,named entity recognition">
+  <meta name="author" content="Anatolii Stehnii">
+
+  <meta property="og:description" content="Binary relations extractor" />
+  <meta property="og:description" content="Form for binary relation extraction." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Daemon Engineer blog" />
+  <meta property="og:image" content="https://www.abondance.com/actualites/wp-content/uploads/2016/02/knowledge-graph-atomes-logo.jpg" />
+{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <p class="lead">
+    This form is connected to backend service, which can process Ukrainian text and find all named entities and binary relations in it.
+    For now I have trained only a "parent of" type of relations.
+  </p>
+</div>
+
+<div ng-app="de.apps.bre" ng-controller="breController">
+  <div class="row">
+    <div class="col-lg-12">
+      <form ng-submit="send(text)" name="breForm">
+        <div class="form-group">
+          <textarea name="text" aria-describedby="helpBlock" required ng-model="text" class="form-control"></textarea>
+          <span id="helpBlock" class="help-block"></span>
+        </div>
+        <button type="submit" class="btn btn-default btn-primary">Submit</button>
+      </form>
+    </div>
+    <div class="col-lg-12" ng-if="response">
+      {{response}}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+  <script src="/js/bre.js"></script>
+{% endblock %}
