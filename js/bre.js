@@ -1,11 +1,6 @@
 'use strict';
 
-angular.module('de.apps.bre', [])
-
-.config(['$interpolateProvider', function($interpolateProvider) {
-  $interpolateProvider.startSymbol('{a');
-  $interpolateProvider.endSymbol('a}');
-}])
+angular.module('de.apps.bre', ['de.apps'])
 
 .controller('breController', function($scope, $http) {
     $scope.send = function(text) {

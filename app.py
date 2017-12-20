@@ -1,6 +1,6 @@
 from flask import Flask, send_from_directory
 from index import index_fn
-from apps.bre import static_bre_fn, api_bre_fn
+# from apps.bre import static_bre_fn, api_bre_fn
 
 app = Flask(__name__, static_url_path='')
 
@@ -25,14 +25,23 @@ def index():
     return index_fn()
 
 
-@app.route('/bre')
-def bre():
-    return static_bre_fn()
+# @app.route('/bre')
+# def bre():
+#     return static_bre_fn()
+#
+#
+# @app.route('/bre/api', methods=['POST'])
+# def bre_api():
+#     return api_bre_fn()
+
+@app.route('/codegen')
+def condegen():
+    return static_codegen_fn()
 
 
-@app.route('/bre/api', methods=['POST'])
-def bre_api():
-    return api_bre_fn()
+@app.route('/codegen/api', methods=['POST'])
+def codegen_api():
+    return api_codegen_fn()
 
 
 if __name__ == '__main__':

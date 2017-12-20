@@ -1,5 +1,6 @@
 flask
-tokenize_uk
+# tokenize_uk
 numpy
 langdetect
 nltk
+astor
