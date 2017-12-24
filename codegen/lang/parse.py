@@ -4,7 +4,6 @@ import re
 import token as tk
 from io import StringIO
 from tokenize import generate_tokens
-from tqdm import tqdm
 
 from codegen.lang.astnode import ASTNode
 from codegen.lang.grammar import is_compositional_leaf, NODE_FIELD_BLACK_LIST, PythonGrammar
@@ -279,25 +278,6 @@ def parse_raw(code):
     tree = add_root(tree)
 
     return tree
-
-
-def get_grammar(parse_trees):
-    rules = set()
-
-    print("Generating grammar from parse trees...")
-    for parse_tree in tqdm(parse_trees):
-        if parse_tree is None: continue
-
-        parse_tree_rules, rule_parents = parse_tree.get_productions()
-        for rule in parse_tree_rules:
-            rules.add(rule)
-
-    rules = list(sorted(rules, key=lambda x: x.__repr__()))
-    grammar = PythonGrammar(rules)
-
-    logging.info('num. rules: %d', len(rules))
-
-    return grammar
 
 
 def tokenize_code(code):

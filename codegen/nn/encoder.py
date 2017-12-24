@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch.nn.init as init
 from torch.autograd import Variable as Var
 
-from codegen.model.utils import *
+from codegen.nn.utils import *
 
 
 class LSTM(nn.Module):

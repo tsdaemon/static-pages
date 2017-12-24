@@ -1,85 +1,57 @@
 from flask import render_template, jsonify, request
-import os
-import torch
+import astor
+
+import codegen.Constants as Constants
+from codegen.preprocess import *
+from codegen.lang.parse import *
+from codegen.load import load_models
+
+nn, grammar, terminal_vocab, vocab = load_models('./models/codegen')
 
 
-def load_models(data_path):
-    nn_path = os.path.join(data_path, "model.pth")
-    model = torch.load(nn_path)
-
-data_path = os.environ['CODEGEN_MODELS']
-model, vocab = load_models(data_path)
+def static_codegen_fn():
+    return render_template('codegen.html')
 
 
-def static_bre_fn():
-    return render_template('bre.html')
-
-
-def api_bre_fn():
+def api_codegen_fn():
     """
-    API function looking for all binary relations in text
+    API function which converts NL query into Python code
     :param text:
     :return:
     """
-    text = request.json[u'text']
+    query = request.json[u'query']
+    result = {}
 
-    # detect language and select model
-    lang = detect(text)
-    if lang not in models:
-        return language_not_supported_error(lang)
-    model = models[lang]
+    try:
+        # tokenize text
+        tokens, str_map = tokenize_and_strmap_query(query)
 
-    # tokenize
-    sentences = model['tokenize'](text)
+        indices = vocab.convertToIdx(tokens, Constants.UNK_WORD)
 
-    # look for relations in each sentence
-    result = []
-    for tokens in sentences:
-        sent = {
-            'tokens': tokens,
-            'relations': []
-        }
+        # production model does not use trees
+        cand_list = nn(None, indices, tokens)
+        candidats = []
+        for cid, cand in enumerate(cand_list[:10]):
+            try:
+                ast_tree = decode_tree_to_python_ast(cand.tree)
+                code = astor.to_source(ast_tree)
+                candidats.append(code)
+            except:
+                logging.debug("Exception in converting tree to code:"
+                              "query: {}, beam pos: {}".format(query, cid))
 
-        # find entities
-        entities = model['ner'].extract_entities(tokens)
-        sent['entities'] = list(map(lambda entity: transform_entity(entity, tokens), entities))
+        if len(candidats) > 0:
+            code = candidats[0]
+            for literal, place_holder in str_map.items():
+                code = code.replace('\'' + place_holder + '\'', literal)
+            result['code'] = code
+        else:
+            logging.error('No code generate for query: {}'.format(query))
+            result['error'] = 'No code was generated for this query.'
 
-        # look for relation between each pair of persona entities
-        persona_entities = filter(lambda e: e[1] == model['person_entity_type'], entities)
-        for subj, obj in permutations(persona_entities, 2):
-            find_relations(model, obj, sent, subj, tokens)
+    except Exception as e:
+        logging.exception('Error occured during code generation for query: {}'.format(query), exc_info=e)
+        result['error'] = 'Error occured during code generation for this query.'
 
-        result.append(sent)
     return jsonify(results=result)
 
-
-def find_relations(model, obj, sent, subj, tokens):
-    rel = model['ner'].extract_binary_relation(tokens, subj[0], obj[0])
-    rel_val = model['bre'](rel)
-    ret_val_proba = logreg_model.predict_proba(np.array([rel_val]).reshape(-1, 1))[:, 1]
-    relation = {
-        'object': transform_entity(obj, tokens),
-        'subject': transform_entity(subj, tokens),
-        'proba': ret_val_proba[0]
-    }
-    sent['relations'].append(relation)
-
-
-def language_not_supported_error(lang):
-    result = {'error': 'Language {} is not supported. Please use one of supported languages: {}.'.format(lang,
-                                                                                                         supported_lang)}
-    return jsonify(results=result)
-
-
-def transform_entity(entity, tokens):
-    """
-    Restores entity text from tokens
-    :param entities:
-    :param tokens:
-    :return:
-    """
-    return {
-        'text': " ".join(tokens[i] for i in entity[0]),
-        'type': entity[1],
-        'range': [i for i in entity[0]]
-    }

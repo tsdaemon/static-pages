@@ -1,6 +1,10 @@
+from log import init_log
+init_log()
+
 from flask import Flask, send_from_directory
 from index import index_fn
 # from apps.bre import static_bre_fn, api_bre_fn
+from apps.codegen import static_codegen_fn, api_codegen_fn
 
 app = Flask(__name__, static_url_path='')
 

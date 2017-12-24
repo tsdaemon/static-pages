@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.init as init
 import torch.nn.functional as F
 
-from codegen.model.utils import *
+from codegen.nn.utils import *
 
 
 class CondAttLSTM(nn.Module):

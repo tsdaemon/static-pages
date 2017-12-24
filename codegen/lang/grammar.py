@@ -2,7 +2,6 @@ import ast
 import inspect
 from collections import OrderedDict, defaultdict
 import logging
-from tqdm import tqdm
 
 from codegen.lang.astnode import ASTNode
 from codegen.lang.util import typename
@@ -20,8 +19,7 @@ class Grammar(object):
         node_types = set()
         lhs_nodes = set()
         rhs_nodes = set()
-        print("Grammar initialization...")
-        for rule in tqdm(self.rules):
+        for rule in self.rules:
             self.rule_index[rule.parent].append(rule)
 
             # we also store all unique node types

@@ -29,4 +29,6 @@ venv
 build
 .idea
 daemon-apps
-model/*
+models/*
+
+*.log

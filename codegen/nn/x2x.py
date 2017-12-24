@@ -3,10 +3,10 @@ from torch.nn import Parameter
 import numpy as np
 
 import codegen.Constants as Constants
-from codegen.model.encoder import EncoderLSTMWrapper
-from codegen.model.decoder import *
-from codegen.model.layers import *
-from codegen.model.utils import *
+from codegen.nn.encoder import EncoderLSTMWrapper
+from codegen.nn.decoder import *
+from codegen.nn.layers import *
+from codegen.nn.utils import *
 from codegen.lang.hyp import Hyp
 
 sys.setrecursionlimit(50000)

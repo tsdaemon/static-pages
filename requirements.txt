@@ -1,6 +1,7 @@
 flask
 # tokenize_uk
 numpy
-langdetect
+# langdetect
 nltk
+torch # 0.3.0
 astor
