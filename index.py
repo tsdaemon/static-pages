@@ -9,7 +9,7 @@ app_list = [
     {
         'name': 'Description to code translation',
         'description': 'Neural model for a code generation from a text description.',
-        'href': '/codegen'
+        'href': '/apps/codegen'
     }
 ]
 

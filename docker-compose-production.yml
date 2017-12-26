@@ -3,15 +3,15 @@ services:
 
   web:
     restart: always
-    build: .
+    image: staticpages_web_1
     expose:
       - "5000"
 
   nginx:
     restart: always
-    build: ./nginx
+    image: staticpages_nginx_1
     ports:
-      - "127.0.0.1:8080:80"
+      - "0.0.0.0:8888:80"
     volumes:
       - /www/static
     links:

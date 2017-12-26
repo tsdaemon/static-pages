@@ -26,9 +26,11 @@ pip-log.txt
 #Mr Developer
 venv
 *.pyc
-build
 .idea
 daemon-apps
 models/*
 
 *.log
+__pycache__/
+apps/__pycache__/
+codegen

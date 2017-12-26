@@ -38,12 +38,12 @@ def index():
 # def bre_api():
 #     return api_bre_fn()
 
-@app.route('/codegen')
+@app.route('/apps/codegen')
 def condegen():
     return static_codegen_fn()
 
 
-@app.route('/codegen/api', methods=['POST'])
+@app.route('/apps/codegen/api', methods=['POST'])
 def codegen_api():
     return api_codegen_fn()
 
