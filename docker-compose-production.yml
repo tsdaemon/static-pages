@@ -11,7 +11,7 @@ services:
     restart: always
     image: staticpages_nginx_1
     ports:
-      - "0.0.0.0:8888:80"
+      - "0.0.0.0:8080:80"
     volumes:
       - /www/static
     links:
