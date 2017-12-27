@@ -106,6 +106,7 @@ def tokenize_and_strmap_query(query):
 
     return new_query_tokens, str_map
 
+
 def gen_code(query):
     # tokenize text
     tokens, str_map = tokenize_and_strmap_query(query)
@@ -138,5 +139,6 @@ def gen_code(query):
 # interactive mode
 if __name__ == '__main__':
     query = sys.argv[1]
+    print("Generating code for query: {}".format(query))
     code = gen_code(query)
     print("Generated code: {}".format(code))
