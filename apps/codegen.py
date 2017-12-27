@@ -10,6 +10,7 @@ import nltk
 import Constants
 from lang.parse import *
 from natural_lang.vocab import Vocab
+cuda = True
 
 
 def load_models(data_path):
@@ -20,7 +21,8 @@ def load_models(data_path):
     terminal_vocab_file = os.path.join(data_path, "terminal_vocab.txt")
     # grammar_file = os.path.join(data_path, "grammar.txt.bin")
 
-    nn = torch.load(nn_file, lambda storage, loc: storage)
+    device_map = lambda storage, loc: storage.cuda() if cuda else lambda storage, loc: storage
+    nn = torch.load(nn_file, device_map)
     nn.eval()
     # with open(grammar_file, 'rb') as f:
     #     grammar = pickle.load(f)
@@ -112,8 +114,10 @@ def gen_code(query):
     tokens, str_map = tokenize_and_strmap_query(query)
 
     indices = vocab.convertToIdx(tokens, Constants.UNK_WORD)
-    # TODO: cuda
+
     indices_tensor = torch.LongTensor(indices)
+    if cuda:
+        indices_tensor = indices_tensor.cuda()
 
     # production model does not use trees
     cand_list = nn(None, indices_tensor, tokens)
